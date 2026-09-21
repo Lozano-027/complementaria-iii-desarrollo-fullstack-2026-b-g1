@@ -1,0 +1,17 @@
+@startuml
+
+actor Usuario
+
+rectangle "TaskController\n<<Controller>>" as Controller
+rectangle "TaskService\n<<Service>>" as Service
+rectangle "TaskRepository\n<<Repository>>" as Repository
+rectangle "TaskEntity\n<<Entity>>" as Entity
+database "Base de datos" as DB
+
+Usuario --> Controller : GET /tasks
+Controller --> Service : solicitar tareas
+Service --> Repository : obtener tareas
+Repository --> Entity : trabajar con datos
+Entity --> DB : consultar datos
+
+@enduml
