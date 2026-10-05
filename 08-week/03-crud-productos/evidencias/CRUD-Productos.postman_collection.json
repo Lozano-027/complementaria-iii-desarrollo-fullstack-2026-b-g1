@@ -1,0 +1,85 @@
+{
+  "info": {
+    "name": "CRUD Productos - Semana 08",
+    "description": "Pruebas del CRUD REST de productos (Desarrollo Fullstack, CORHUILA). Ejecutar en orden con la app corriendo en localhost:8080.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080/api/productos" },
+    { "key": "productoId", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "1. Crear producto (POST 201)",
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "pm.test('Status 201 Created', () => pm.response.to.have.status(201));",
+        "pm.test('Tiene header Location', () => pm.response.to.have.header('Location'));",
+        "const json = pm.response.json();",
+        "pm.test('Devuelve id', () => pm.expect(json.id).to.be.a('number'));",
+        "pm.collectionVariables.set('productoId', json.id);"
+      ]}}],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Mouse\",\n  \"descripcion\": \"Mouse inalámbrico\",\n  \"precio\": 45000,\n  \"stock\": 25\n}", "options": { "raw": { "language": "json" } } },
+        "url": "{{baseUrl}}"
+      }
+    },
+    {
+      "name": "2. Listar productos (GET 200)",
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "pm.test('Status 200 OK', () => pm.response.to.have.status(200));",
+        "pm.test('Es un arreglo con datos', () => pm.expect(pm.response.json()).to.be.an('array').that.is.not.empty);"
+      ]}}],
+      "request": { "method": "GET", "url": "{{baseUrl}}" }
+    },
+    {
+      "name": "3. Obtener producto por id (GET 200)",
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "pm.test('Status 200 OK', () => pm.response.to.have.status(200));",
+        "pm.test('Id correcto', () => pm.expect(pm.response.json().id).to.eql(Number(pm.collectionVariables.get('productoId'))));"
+      ]}}],
+      "request": { "method": "GET", "url": "{{baseUrl}}/{{productoId}}" }
+    },
+    {
+      "name": "4. Actualizar producto (PUT 200)",
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "pm.test('Status 200 OK', () => pm.response.to.have.status(200));",
+        "pm.test('Nombre actualizado', () => pm.expect(pm.response.json().nombre).to.eql('Mouse Gamer'));"
+      ]}}],
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Mouse Gamer\",\n  \"descripcion\": \"Mouse inalámbrico RGB\",\n  \"precio\": 60000,\n  \"stock\": 20\n}", "options": { "raw": { "language": "json" } } },
+        "url": "{{baseUrl}}/{{productoId}}"
+      }
+    },
+    {
+      "name": "5. Borrar producto (DELETE 204)",
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "pm.test('Status 204 No Content', () => pm.response.to.have.status(204));"
+      ]}}],
+      "request": { "method": "DELETE", "url": "{{baseUrl}}/{{productoId}}" }
+    },
+    {
+      "name": "6. Obtener producto borrado (GET 404)",
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "pm.test('Status 404 Not Found', () => pm.response.to.have.status(404));"
+      ]}}],
+      "request": { "method": "GET", "url": "{{baseUrl}}/{{productoId}}" }
+    },
+    {
+      "name": "7. Crear producto inválido (POST 400)",
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "pm.test('Status 400 Bad Request', () => pm.response.to.have.status(400));",
+        "pm.test('Reporta errores de validación', () => pm.expect(pm.response.json().errores).to.have.any.keys('nombre', 'precio'));"
+      ]}}],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"\",\n  \"precio\": -10,\n  \"stock\": 5\n}", "options": { "raw": { "language": "json" } } },
+        "url": "{{baseUrl}}"
+      }
+    }
+  ]
+}

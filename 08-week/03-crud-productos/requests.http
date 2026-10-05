@@ -1,0 +1,43 @@
+### 1. Crear producto (POST -> 201)
+POST http://localhost:8080/api/productos
+Content-Type: application/json
+
+{
+  "nombre": "Mouse",
+  "descripcion": "Mouse inalámbrico",
+  "precio": 45000,
+  "stock": 25
+}
+
+### 2. Listar productos (GET -> 200)
+GET http://localhost:8080/api/productos
+
+### 3. Obtener producto por id (GET -> 200)
+GET http://localhost:8080/api/productos/1
+
+### 4. Actualizar producto (PUT -> 200)
+PUT http://localhost:8080/api/productos/1
+Content-Type: application/json
+
+{
+  "nombre": "Mouse Gamer",
+  "descripcion": "Mouse inalámbrico RGB",
+  "precio": 60000,
+  "stock": 20
+}
+
+### 5. Borrar producto (DELETE -> 204)
+DELETE http://localhost:8080/api/productos/1
+
+### 6. Obtener producto borrado (GET -> 404)
+GET http://localhost:8080/api/productos/1
+
+### 7. Crear producto inválido (POST -> 400)
+POST http://localhost:8080/api/productos
+Content-Type: application/json
+
+{
+  "nombre": "",
+  "precio": -10,
+  "stock": 5
+}
